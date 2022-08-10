@@ -12,6 +12,19 @@
 		return false;
 		});
 
+	RequstProxy::addErrorIntercept([=](Exception * e, HttpInfo* httpInfo) {
+		if (NotHttpException* exception = dynamic_cast<NotHttpException*>(e)) {
+			httpInfo->httpResponse.body = "NotHttpException";
+		}
+		if (UnsupportedHttpException* exception = dynamic_cast<UnsupportedHttpException*>(e)) {
+			httpInfo->httpResponse.body = "UnsupportedHttpException";
+		}
+		if (HttpHeaderException* exception = dynamic_cast<HttpHeaderException*>(e)) {
+			httpInfo->httpResponse.body = "HttpHeaderException";
+		}
+		return false;
+		});
+
 	RequstProxy::addRequst("/word", [=]() {
 		HttpInfo* httpInfo = RequstProxy::getHttpInfo();
 		httpInfo->httpResponse.body = "word";
